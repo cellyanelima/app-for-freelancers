@@ -1,25 +1,14 @@
 import express from 'express'
-import * as db from '../db/index.ts'
+
 import { validateCity } from './helpers.ts'
+import * as db from '../db/index.ts'
 
 const router = express.Router()
-
-// GET /api/v1/opportunities
-router.get('/', async (req, res, next) => {
-  try {
-    // TODO: Replace this with all of the Opportunities in the database
-    const opportunities = await db.getAllOpportunities()
-    res.json({ opportunities })
-  } catch (e) {
-    next(e)
-  }
-})
 
 // GET api/v1/opportunities/auckland
 router.get('/:city', async (req, res, next) => {
   try {
     const city = validateCity(req.params.city)
-    console.log('Validated city:', city)
     const opportunities = await db.getOpportunitiesByCity(city)
     res.json({ city, opportunities })
   } catch (e) {
