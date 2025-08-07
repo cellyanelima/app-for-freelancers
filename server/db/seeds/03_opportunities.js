@@ -11,7 +11,7 @@ export async function seed(knex) {
       profession_id: 1,
       name: 'Philip Storn',
       suburb: 'Churton Park',
-      city: 'Wellington',
+      city: 'wellington',
       mobile: '25852963',
       email: 'phil@gmail.com',
       description: 'I need to plant about 10 lily plants in my outdoor garden.',
@@ -22,7 +22,7 @@ export async function seed(knex) {
       profession_id: '1',
       name: 'Stuart Litlle',
       suburb: 'Tawa',
-      city: 'Wellington',
+      city: 'wellington',
       mobile: '22963741',
       email: 'phil@gmail.com',
       description:
@@ -34,7 +34,7 @@ export async function seed(knex) {
       profession_id: '3',
       name: 'Steave Bee',
       suburb: 'Tuarth',
-      city: 'Wellington',
+      city: 'wellington',
       mobile: '217416655',
       email: 'ste@gmail.com',
       description:
