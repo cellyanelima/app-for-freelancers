@@ -1,11 +1,16 @@
 import * as Path from 'node:path'
-
 import express from 'express'
+import professionsRoutes from './routes/professions.ts'
+import freelancersRoutes from './routes/freelancers.ts'
+import opportunitiesRoutes from './routes/opportunities.ts'
 
 const server = express()
+
 server.use(express.json())
 
-// ADD YOUR API ROUTES HERE
+server.use('/api/v1/professions', professionsRoutes)
+server.use('/api/v1/freelancers', freelancersRoutes)
+server.use('/api/v1/opportunities', opportunitiesRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))
