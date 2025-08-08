@@ -1,6 +1,7 @@
 import { Profession } from '../../models/Profession.ts'
 import {
   Opportunity,
+  OpportunityData,
   OpportunityWithProfission,
 } from '../../models/Opportunity.ts'
 import { Freelancer } from '../../models/Freelancer.ts'
@@ -47,4 +48,53 @@ export async function getOpportunitiesByCity(
     )
 
   return opportunities as OpportunityWithProfission[]
+}
+
+export async function getOpportunitieById(id: number): Promise<Opportunity> {
+  const opportunity = await connection('opportunities')
+    .where({ id })
+    .select('*')
+    .first()
+  return opportunity as Opportunity
+}
+
+export async function addNewOpportunity(
+  opportunity: OpportunityData,
+): Promise<number> {
+  const {
+    professionId,
+    name,
+    suburb,
+    city,
+    mobile,
+    email,
+    description,
+    hours,
+  } = opportunity
+
+  const newOpportunity = {
+    profession_id: professionId,
+    name,
+    suburb,
+    city,
+    mobile,
+    email,
+    description,
+    hours,
+  }
+
+  //console.log('Inserting opportunity with:', newOpportunity)
+
+  const [id] = await connection('opportunities').insert(newOpportunity)
+  return id
+}
+
+export async function getProfessionByName(
+  name: string,
+): Promise<Profession | undefined> {
+  const profession = await connection('professions')
+    .whereRaw('LOWER(name) = ?', [name.toLowerCase()])
+    .first()
+
+  return profession as Profession | undefined
 }
