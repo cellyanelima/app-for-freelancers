@@ -98,3 +98,36 @@ export async function getProfessionByName(
 
   return profession as Profession | undefined
 }
+
+export async function deleteOpportunity(id: number): Promise<void> {
+  await connection('opportunities').where({ id }).delete()
+}
+
+export async function updateOpportunity(data: Opportunity): Promise<number> {
+  const {
+    id,
+    professionId,
+    name,
+    suburb,
+    city,
+    mobile,
+    email,
+    description,
+    hours,
+  } = data
+
+  const rows = await connection('opportunities')
+    .where({ id })
+    .update({
+      profession_id: Number(professionId),
+      name,
+      suburb,
+      city: city?.toLowerCase(),
+      mobile,
+      email,
+      description,
+      hours: Number(hours),
+    })
+
+  return rows
+}
