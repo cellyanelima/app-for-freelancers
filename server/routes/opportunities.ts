@@ -1,7 +1,6 @@
 import express from 'express'
 import * as db from '../db/index.ts'
 import { validNzCities } from './helpers.ts'
-//import { validateCity } from './helpers.ts'
 
 const router = express.Router()
 
@@ -65,6 +64,61 @@ router.post('/', async (req, res, next) => {
     const url = `/api/v1/opportunities/id/${id}`
     res.setHeader('Opportunity', url)
     res.status(201).json({ opportunity: url })
+  } catch (e) {
+    next(e)
+  }
+})
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const id = Number(req.params.id)
+    await db.deleteOpportunity(id)
+    res.sendStatus(204)
+  } catch (e) {
+    next(e)
+  }
+})
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const id = Number(req.params.id)
+    if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
+
+    const {
+      professionName,
+      professionId,
+      name,
+      suburb,
+      city,
+      mobile,
+      email,
+      description,
+      hours,
+    } = req.body
+
+    let resolvedProfessionId = professionId
+    if (!resolvedProfessionId && professionName) {
+      const profession = await db.getProfessionByName(professionName)
+      if (!profession)
+        return res.status(400).json({ error: 'Profession not found.' })
+      resolvedProfessionId = profession.id
+    }
+
+    const updated = await db.updateOpportunity({
+      id,
+      professionId: Number(resolvedProfessionId),
+      name,
+      suburb,
+      city,
+      mobile,
+      email,
+      description,
+      hours,
+    })
+
+    if (updated === 0)
+      return res.status(404).json({ error: 'Opportunity not found' })
+    res.status(204).end()
   } catch (e) {
     next(e)
   }
