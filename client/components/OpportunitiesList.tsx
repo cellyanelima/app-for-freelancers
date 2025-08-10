@@ -1,16 +1,14 @@
-//import LocationsNav from './LocationsNav.tsx'
 import { Link } from 'react-router-dom'
 import { useOpportunities } from '../hooks/api.ts'
-//import LoadingIndicator from './LoadingIndicator.tsx'
+import LoadingIndicator from './LoadingIndicator.tsx'
 
-export default function LocationsList() {
+export default function OpportinitiesList() {
   const { isPending, isError, data } = useOpportunities()
 
   if (isPending) {
     return (
       <>
-        {/*<LocationsNav />
-        <LoadingIndicator />*/}
+        <LoadingIndicator />
       </>
     )
   }
@@ -21,7 +19,6 @@ export default function LocationsList() {
 
   return (
     <>
-      {/*<LocationsNav />*/}
       <h2>Opportunities:</h2>
       <ul className="cards">
         {data?.opportunities.map((data) => (
