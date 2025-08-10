@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { OpportunityData } from '../../models/Opportunity.ts'
-import EditOpportunityForm from './EditOpportinityForm.tsx'
-import LineupNav from './LineupNav'
+import EditOpportunityForm from './EditOpportunityForm.tsx'
+import LineupNav from './LineupNav.tsx'
 import {
   useDeleteOpportunity,
   useEditOpportunity,
@@ -32,7 +32,8 @@ export default function EditEvent() {
   const opp = opportunity.data
 
   const handleSubmit = async (formData: OpportunityData) => {
-    editOpportunity.mutateAsync({ id, ...formData })
+    await editOpportunity.mutateAsync(formData)
+    navigate(`/cities/${formData.city}`)
   }
 
   const handleDelete = async (evt: React.FormEvent) => {

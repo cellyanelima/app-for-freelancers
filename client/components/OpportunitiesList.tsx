@@ -25,6 +25,7 @@ export default function OpportinitiesList() {
           <li key={data.id} className="card">
             <div className="opportunity">
               <span className="title">{data.name}</span>
+              <p className="data">{data.suburb}</p>
               <p className="data">{data.description}</p>
               <Link to={`/opportunities/${data.id}/edit`}>
                 edit opportunity
