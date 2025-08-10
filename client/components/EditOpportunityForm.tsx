@@ -1,7 +1,7 @@
 import { useState, FormEvent, ChangeEvent } from 'react'
 import { useProfessions } from '../hooks/api.ts'
-import { OpportunityData } from '../../models/Opportunity'
-import LoadingIndicator from './LoadingIndicator'
+import { OpportunityData } from '../../models/Opportunity.ts'
+import LoadingIndicator from './LoadingIndicator.tsx'
 
 interface Props extends OpportunityData {
   submitLabel: string
@@ -13,7 +13,7 @@ export default function EditOpportunityForm(props: Props) {
   const professions = useProfessions()
 
   const [formState, setFormState] = useState<OpportunityData>({
-    ...initial, // inclui professionId, name, city, etc
+    ...initial,
   })
 
   const handleChange = (
@@ -40,7 +40,7 @@ export default function EditOpportunityForm(props: Props) {
   return (
     <form onSubmit={handleSubmit} className="form">
       <label htmlFor="name" className="label">
-        Opportunity name
+        Name
       </label>
       <input
         type="text"

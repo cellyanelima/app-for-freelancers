@@ -11,7 +11,7 @@ export default function LineupNav() {
       <NavLink to="/cities/tauranga">Tauranga</NavLink>
       <NavLink to="/cities/napier">Napier</NavLink>
       <NavLink className="nav" to="/opportunities">
-        Return
+        All opportunities
       </NavLink>
     </nav>
   )

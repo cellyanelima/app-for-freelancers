@@ -29,7 +29,7 @@ export default function CityOpportunity() {
         opportunities: <span className="data">{city}</span>
       </h2>
 
-      <Link className="nav" to={`/opportunities/${city}`}>
+      <Link className="nav" to={`/opportunities/new?city=${city}`}>
         add opportunities
       </Link>
 
@@ -38,6 +38,7 @@ export default function CityOpportunity() {
           ({
             professionName,
             id,
+            city,
             suburb,
             mobile,
             email,
@@ -48,6 +49,9 @@ export default function CityOpportunity() {
               <div className="opportunity">
                 <span className="title">{professionName}</span>
                 <div className="time-opportunity">
+                  <p>
+                    City: <span className="data">{city}</span>
+                  </p>
                   <p>
                     Suburb: <span className="data">{suburb}</span>
                   </p>
@@ -63,7 +67,7 @@ export default function CityOpportunity() {
                 </div>
               </div>
               <p className="opportunity-description data">{description}</p>
-              <Link to={`/opportunities/${id}/edit`}>edit opportunity</Link>
+              {/*<Link to={`/opportunities/${id}/edit`}>edit opportunity</Link>*/}
             </li>
           ),
         )}
