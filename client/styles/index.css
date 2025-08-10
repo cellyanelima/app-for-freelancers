@@ -126,8 +126,7 @@ p {
   background-image: url('/images/icons/icon-5.webp');
 }
 
-.opportunity,
-.event {
+.opportunity {
   display: flex;
   flex-direction: column;
 }
@@ -151,7 +150,7 @@ p {
   font-size: 0.875rem;
 }
 
-.event-description {
+.opportunity-description {
   margin-top: 15px;
   margin-bottom: 15px;
 }

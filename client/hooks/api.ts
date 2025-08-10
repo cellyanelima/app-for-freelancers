@@ -1,1 +1,6 @@
 export { default as useOpportunities } from './use-opportunities.ts'
+export { default as useCities } from './use-cities.ts'
+export { default as useDeleteOpportunity } from './use-delete-opportunity.ts'
+export { default as useOpportunityData } from './use-opportunity-data.ts'
+export { default as useEditOpportunity } from './use-edit-opportunity.ts'
+export { default as useProfessions } from './use-professions.ts'
