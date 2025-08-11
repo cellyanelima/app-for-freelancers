@@ -16,11 +16,24 @@ body {
 }
 
 header {
-  background-image: url('/images/workers.jpg');
-  background-size: cover;
-  background-position: center;
-  background-color: #000724;
-  width: 100%;
+  position: relative;
+  background-image: url('/images/icons/workers.webp');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
+  min-height: 230px;
+}
+
+header .site-title {
+  position: absolute;
+  top: 30%;
+  left: 15%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0;
+  font-size: clamp(28px, 6vw, 56px);
+  color: #000724;
+  line-height: 1.1;
 }
 
 a:link,
