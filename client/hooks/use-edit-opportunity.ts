@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import request from 'superagent'
-import type { OpportunityData } from '../../models/Opportunity'
+import type { Opportunity } from '../../models/Opportunity'
 
 export default function useEditOpportunity(id: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (values: OpportunityData) => {
+    mutationFn: async (values: Opportunity) => {
       await request.put(`/api/v1/opportunities/${id}`).send(values)
     },
     onSuccess: () => {

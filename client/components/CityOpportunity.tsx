@@ -67,7 +67,6 @@ export default function CityOpportunity() {
                 </div>
               </div>
               <p className="opportunity-description data">{description}</p>
-              {/*<Link to={`/opportunities/${id}/edit`}>edit opportunity</Link>*/}
             </li>
           ),
         )}

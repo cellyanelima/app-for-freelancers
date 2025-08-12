@@ -9,7 +9,7 @@ export interface OpportunityData {
   hours: string
 }
 
-export interface OpportunityWithProfission {
+export interface OpportunityWithProfession {
   id: number
   professionName: string
   suburb: string

@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { OpportunityData } from '../../models/Opportunity.ts'
+import { Opportunity } from '../../models/Opportunity.ts'
 import EditOpportunityForm from './EditOpportunityForm.tsx'
 import LineupNav from './LineupNav.tsx'
 import {
@@ -30,8 +30,9 @@ export default function EditEvent() {
     return 'Failed to load opportunity data'
 
   const opp = opportunity.data
+  //console.log(opp)
 
-  const handleSubmit = async (formData: OpportunityData) => {
+  const handleSubmit = async (formData: Opportunity) => {
     await editOpportunity.mutateAsync(formData)
     navigate(`/cities/${formData.city}`)
   }

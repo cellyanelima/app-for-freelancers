@@ -5,7 +5,7 @@ import type { Profession } from '../../models/Profession'
 
 export default function useProfessions() {
   return useQuery({
-    queryKey: ['professions'],
+    queryKey: ['profession'],
     queryFn: async () => {
       const res = await request.get('/api/v1/professions')
       if (res.ok) return res.body as { professions: Profession[] }

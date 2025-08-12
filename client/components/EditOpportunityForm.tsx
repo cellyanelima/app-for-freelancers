@@ -1,18 +1,18 @@
 import { useState, FormEvent, ChangeEvent } from 'react'
 import { useProfessions } from '../hooks/api.ts'
-import { OpportunityData } from '../../models/Opportunity.ts'
+import { Opportunity } from '../../models/Opportunity.ts'
 import LoadingIndicator from './LoadingIndicator.tsx'
 
-interface Props extends OpportunityData {
+interface Props extends Opportunity {
   submitLabel: string
-  onSubmit: (_: OpportunityData) => void
+  onSubmit: (_: Opportunity) => void
 }
 
 export default function EditOpportunityForm(props: Props) {
   const { submitLabel, onSubmit, ...initial } = props
   const professions = useProfessions()
 
-  const [formState, setFormState] = useState<OpportunityData>({
+  const [formState, setFormState] = useState<Opportunity>({
     ...initial,
   })
 
@@ -24,7 +24,7 @@ export default function EditOpportunityForm(props: Props) {
     const { name, value } = evt.target
     setFormState((prev) => ({
       ...prev,
-      [name]: name === 'professionId' ? Number(value) : value,
+      [name]: value,
     }))
   }
 
@@ -63,11 +63,11 @@ export default function EditOpportunityForm(props: Props) {
         value={formState.description}
       />
 
-      <label htmlFor="professionId" className="label">
+      <label htmlFor="profession" className="label">
         Profession
       </label>
       <select
-        id="professionId"
+        id="profession"
         name="professionId"
         value={formState.professionId}
         onChange={handleChange}

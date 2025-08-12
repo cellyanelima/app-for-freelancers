@@ -9,7 +9,7 @@ const router = express.Router()
 router.get('/:city', async (req, res, next) => {
   try {
     const city = validateCity(req.params.city)
-    console.log('Validated city:', city)
+    //console.log('Validated city:', city)
     const opportunities = await db.getOpportunitiesByCity(city)
     res.json({ city, opportunities })
   } catch (e) {

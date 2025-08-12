@@ -30,7 +30,7 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const {
-      professionName,
+      professionId,
       name,
       suburb,
       city,
@@ -44,14 +44,8 @@ router.post('/', async (req, res, next) => {
       return res.status(400).json({ error: 'Field city is invalid.' })
     }
 
-    const profession = await db.getProfessionByName(professionName)
-    //console.log('Profession found:', profession)
-    if (!profession) {
-      return res.status(400).json({ error: 'Profession not found.' })
-    }
-
     const id = await db.addNewOpportunity({
-      professionId: profession.id,
+      professionId: Number(professionId),
       name,
       suburb,
       city,
@@ -84,29 +78,17 @@ router.put('/:id', async (req, res, next) => {
     const id = Number(req.params.id)
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
 
-    const {
-      professionName,
-      professionId,
-      name,
-      suburb,
-      city,
-      mobile,
-      email,
-      description,
-      hours,
-    } = req.body
+    const { name, suburb, city, mobile, email, description, hours } = req.body
 
-    let resolvedProfessionId = professionId
-    if (!resolvedProfessionId && professionName) {
-      const profession = await db.getProfessionByName(professionName)
-      if (!profession)
-        return res.status(400).json({ error: 'Profession not found.' })
-      resolvedProfessionId = profession.id
+    const professionId = Number(req.body.professionId)
+    if (!professionId) {
+      return res.status(400).json({ error: 'Invalid Profession Id' })
     }
 
-    const updated = await db.updateOpportunity({
+    //console.log('req.body.professionId:', req.body)
+    await db.updateOpportunity({
       id,
-      professionId: Number(resolvedProfessionId),
+      professionId: Number(professionId),
       name,
       suburb,
       city,
@@ -116,8 +98,6 @@ router.put('/:id', async (req, res, next) => {
       hours,
     })
 
-    if (updated === 0)
-      return res.status(404).json({ error: 'Opportunity not found' })
     res.status(204).end()
   } catch (e) {
     next(e)
