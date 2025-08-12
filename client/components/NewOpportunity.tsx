@@ -23,21 +23,7 @@ export default function NewOpportunity() {
   const defaultProfessionId = list[0]?.id ?? 1
 
   const handleSubmit = async (data: OpportunityData) => {
-    const match = list.find(
-      (p: { id: number; name: string }) => p.id === data.professionId,
-    )
-    const professionName = match?.name ?? ''
-
-    await createOpportunity.mutateAsync({
-      professionName,
-      name: data.name,
-      suburb: data.suburb,
-      city: data.city,
-      mobile: data.mobile,
-      email: data.email,
-      description: data.description,
-      hours: data.hours,
-    })
+    await createOpportunity.mutateAsync(data)
     navigate(`/cities/${data.city}`)
   }
 
@@ -56,6 +42,7 @@ export default function NewOpportunity() {
         description=""
         hours=""
         onSubmit={handleSubmit}
+        id={0}
       />
     </>
   )

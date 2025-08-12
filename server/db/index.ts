@@ -2,7 +2,7 @@ import { Profession } from '../../models/Profession.ts'
 import {
   Opportunity,
   OpportunityData,
-  OpportunityWithProfission,
+  OpportunityWithProfession,
 } from '../../models/Opportunity.ts'
 import { Freelancer } from '../../models/Freelancer.ts'
 import knexFile from './knexfile.js'
@@ -20,25 +20,42 @@ export async function getAllProfessions(): Promise<Profession[]> {
 }
 
 export async function getAllOpportunities(): Promise<Opportunity[]> {
-  const opportunities = await connection('opportunities').select('*')
+  const opportunities = await connection('opportunities').select(
+    'id',
+    'profession_id as professionId',
+    'name',
+    'suburb',
+    'city',
+    'mobile',
+    'email',
+    'description',
+    'hours',
+  )
   return opportunities as Opportunity[]
 }
 
 export async function getAllFreelancers(): Promise<Freelancer[]> {
-  const freelancers = await connection('freelancers').select('*')
+  const freelancers = await connection('freelancers').select(
+    'id',
+    'profession_id as professionId',
+    'name',
+    'experience',
+    'availability',
+    'mobile',
+    'email',
+  )
   return freelancers as Freelancer[]
 }
 
 export async function getOpportunitiesByCity(
   city: string,
-): Promise<OpportunityWithProfission[]> {
+): Promise<OpportunityWithProfession[]> {
   const opportunities = await connection('opportunities')
     .join('professions', 'opportunities.profession_id', 'professions.id')
     .where('opportunities.city', city)
     .select(
       'opportunities.id',
       'professions.name as professionName',
-      'opportunities.name as opportunitiesName',
       'opportunities.suburb',
       'opportunities.city',
       'opportunities.mobile',
@@ -47,13 +64,23 @@ export async function getOpportunitiesByCity(
       'opportunities.hours',
     )
 
-  return opportunities as OpportunityWithProfission[]
+  return opportunities as OpportunityWithProfession[]
 }
 
 export async function getOpportunitieById(id: number): Promise<Opportunity> {
   const opportunity = await connection('opportunities')
     .where({ id })
-    .select('*')
+    .select(
+      'id',
+      'profession_id as professionId',
+      'name',
+      'suburb',
+      'city',
+      'mobile',
+      'email',
+      'description',
+      'hours',
+    )
     .first()
   return opportunity as Opportunity
 }
@@ -85,25 +112,16 @@ export async function addNewOpportunity(
 
   //console.log('Inserting opportunity with:', newOpportunity)
 
-  const [id] = await connection('opportunities').insert(newOpportunity)
-  return id
-}
-
-export async function getProfessionByName(
-  name: string,
-): Promise<Profession | undefined> {
-  const profession = await connection('professions')
-    .whereRaw('LOWER(name) = ?', [name.toLowerCase()])
-    .first()
-
-  return profession as Profession | undefined
+  return await connection('opportunities').insert(newOpportunity)
 }
 
 export async function deleteOpportunity(id: number): Promise<void> {
   await connection('opportunities').where({ id }).delete()
 }
 
-export async function updateOpportunity(data: Opportunity): Promise<number> {
+export async function updateOpportunity(
+  updatedOpportunity: Opportunity,
+): Promise<void> {
   const {
     id,
     professionId,
@@ -114,9 +132,9 @@ export async function updateOpportunity(data: Opportunity): Promise<number> {
     email,
     description,
     hours,
-  } = data
+  } = updatedOpportunity
 
-  const rows = await connection('opportunities')
+  await connection('opportunities')
     .where({ id })
     .update({
       profession_id: Number(professionId),
@@ -128,6 +146,4 @@ export async function updateOpportunity(data: Opportunity): Promise<number> {
       description,
       hours: Number(hours),
     })
-
-  return rows
 }
