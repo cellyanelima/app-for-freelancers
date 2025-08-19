@@ -1,12 +1,14 @@
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
+ * @returns { Promise<knex.SchemaBuilder> }
  */
-export function up(knex) {
-  return knex.schema.createTable('professions', (table) => {
+
+export async function up(knex) {
+  await knex.schema.createTable('professions', (table) => {
     table.increments('id').primary()
-    table.string('name')
+    table.string('name').notNullable().unique()
     table.string('description')
+    table.timestamps(true, true)
   })
 }
 
@@ -14,6 +16,7 @@ export function up(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-export function down(knex) {
-  return knex.schema.dropTable('professions')
+
+export async function down(knex) {
+  await knex.schema.dropTableIfExists('professions')
 }
