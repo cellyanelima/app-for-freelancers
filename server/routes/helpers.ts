@@ -1,4 +1,4 @@
-export const validNzCities = [
+/* export const validNzCities = [
   'auckland',
   'wellington',
   'christchurch',
@@ -17,3 +17,4 @@ export function validateCity(
   if (!cities.includes(cityLower)) return cities[0]
   return cityLower
 }
+*/

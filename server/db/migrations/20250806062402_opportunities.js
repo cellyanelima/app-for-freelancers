@@ -30,8 +30,7 @@ export function up(knex) {
       .index()
 
     table.string('name')
-    table.string('suburb')
-    table.string('city')
+
     table.string('mobile')
     table.string('email')
     table.string('description')
