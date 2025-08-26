@@ -24,12 +24,14 @@ export async function getAllOpportunities(): Promise<Opportunity[]> {
     'id',
     'profession_id as professionId',
     'name',
-    'suburb',
-    'city',
     'mobile',
     'email',
     'description',
     'hours',
+    'territorial_authority_id as territorialAuthorityId',
+    'locality_id as localityId',
+    'legacy_city as legacyCity',
+    'legacy_suburb as legacySuburb',
   )
   return opportunities as Opportunity[]
 }
@@ -43,6 +45,8 @@ export async function getAllFreelancers(): Promise<Freelancer[]> {
     'availability',
     'mobile',
     'email',
+    'legacy_city as legacyCity',
+    'legacy_suburb as legacySuburb',
   )
   return freelancers as Freelancer[]
 }
@@ -52,16 +56,19 @@ export async function getOpportunitiesByCity(
 ): Promise<OpportunityWithProfession[]> {
   const opportunities = await connection('opportunities')
     .join('professions', 'opportunities.profession_id', 'professions.id')
-    .where('opportunities.city', city)
+    .where('opportunities.legacy_city', city)
     .select(
       'opportunities.id',
       'professions.name as professionName',
-      'opportunities.suburb',
-      'opportunities.city',
-      'opportunities.mobile',
-      'opportunities.email',
+      'opportunities.name',
       'opportunities.description',
       'opportunities.hours',
+      'opportunities.mobile',
+      'opportunities.email',
+      'territorial_authority_id as territorialAuthorityId',
+      'locality_id as localityId',
+      'legacy_city as legacyCity',
+      'legacy_suburb as legacySuburb',
     )
 
   return opportunities as OpportunityWithProfession[]
@@ -74,12 +81,14 @@ export async function getOpportunitieById(id: number): Promise<Opportunity> {
       'id',
       'profession_id as professionId',
       'name',
-      'suburb',
-      'city',
       'mobile',
       'email',
       'description',
       'hours',
+      'territorial_authority_id as territorialAuthorityId',
+      'locality_id as localityId',
+      'legacy_city as legacyCity',
+      'legacy_suburb as legacySuburb',
     )
     .first()
   return opportunity as Opportunity
@@ -91,23 +100,27 @@ export async function addNewOpportunity(
   const {
     professionId,
     name,
-    suburb,
-    city,
     mobile,
     email,
     description,
     hours,
+    territorialAuthorityId,
+    localityId,
+    legacyCity,
+    legacySuburb,
   } = opportunity
 
   const newOpportunity = {
     profession_id: professionId,
     name,
-    suburb,
-    city,
     mobile,
     email,
     description,
     hours,
+    territorial_authority_id: territorialAuthorityId,
+    locality_id: localityId,
+    legacy_city: legacyCity,
+    legacy_suburb: legacySuburb,
   }
 
   //console.log('Inserting opportunity with:', newOpportunity)
@@ -126,12 +139,14 @@ export async function updateOpportunity(
     id,
     professionId,
     name,
-    suburb,
-    city,
     mobile,
     email,
     description,
     hours,
+    territorialAuthorityId,
+    localityId,
+    legacyCity,
+    legacySuburb,
   } = updatedOpportunity
 
   await connection('opportunities')
@@ -139,11 +154,13 @@ export async function updateOpportunity(
     .update({
       profession_id: Number(professionId),
       name,
-      suburb,
-      city: city?.toLowerCase(),
       mobile,
       email,
       description,
-      hours: Number(hours),
+      hours,
+      territorial_authority_id: territorialAuthorityId,
+      locality_id: localityId,
+      legacy_city: legacyCity,
+      legacy_suburb: legacySuburb,
     })
 }

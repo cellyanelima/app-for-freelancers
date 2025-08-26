@@ -1,6 +1,6 @@
 import express from 'express'
 import * as db from '../db/index.ts'
-import { validNzCities } from './helpers.ts'
+//import { validNzCities } from './helpers.ts'
 
 const router = express.Router()
 
@@ -32,27 +32,27 @@ router.post('/', async (req, res, next) => {
     const {
       professionId,
       name,
-      suburb,
-      city,
       mobile,
       email,
       description,
       hours,
+      territorialAuthorityId,
+      localityId,
+      legacyCity,
+      legacySuburb,
     } = req.body
-
-    if (!validNzCities.includes(city.toLowerCase())) {
-      return res.status(400).json({ error: 'Field city is invalid.' })
-    }
 
     const id = await db.addNewOpportunity({
       professionId: Number(professionId),
       name,
-      suburb,
-      city,
       mobile,
       email,
       description,
       hours,
+      territorialAuthorityId,
+      localityId,
+      legacyCity,
+      legacySuburb,
     })
 
     const url = `/api/v1/opportunities/id/${id}`
@@ -78,7 +78,17 @@ router.put('/:id', async (req, res, next) => {
     const id = Number(req.params.id)
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
 
-    const { name, suburb, city, mobile, email, description, hours } = req.body
+    const {
+      name,
+      mobile,
+      email,
+      description,
+      hours,
+      territorialAuthorityId,
+      localityId,
+      legacyCity,
+      legacySuburb,
+    } = req.body
 
     const professionId = Number(req.body.professionId)
     if (!professionId) {
@@ -90,12 +100,14 @@ router.put('/:id', async (req, res, next) => {
       id,
       professionId: Number(professionId),
       name,
-      suburb,
-      city,
       mobile,
       email,
       description,
       hours,
+      territorialAuthorityId,
+      localityId,
+      legacyCity,
+      legacySuburb,
     })
 
     res.status(204).end()
