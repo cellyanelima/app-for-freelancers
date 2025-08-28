@@ -7,6 +7,7 @@ import {
 import { Freelancer } from '../../models/Freelancer.ts'
 import knexFile from './knexfile.js'
 import knex from 'knex'
+import { Ta } from '../../models/Territorial_authorities.ts'
 
 type Environment = 'production' | 'test' | 'development'
 
@@ -51,12 +52,26 @@ export async function getAllFreelancers(): Promise<Freelancer[]> {
   return freelancers as Freelancer[]
 }
 
+export async function getAllCities(): Promise<Ta[]> {
+  const territorial_authorities = await connection(
+    'territorial_authorities',
+  ).select(
+    'id',
+    'name',
+    'short_name as shortName',
+    'category',
+    'region_id as regionId',
+  )
+  return territorial_authorities as Ta[]
+}
+
 export async function getOpportunitiesByCity(
   city: string,
 ): Promise<OpportunityWithProfession[]> {
-  const opportunities = await connection('opportunities')
+  const cityParam = city ?? ''
+  const asNumber = Number(cityParam)
+  const baseQuery = connection('opportunities')
     .join('professions', 'opportunities.profession_id', 'professions.id')
-    .where('opportunities.legacy_city', city)
     .select(
       'opportunities.id',
       'professions.name as professionName',
@@ -70,8 +85,29 @@ export async function getOpportunitiesByCity(
       'legacy_city as legacyCity',
       'legacy_suburb as legacySuburb',
     )
+    .orderBy('opportunities.id', 'desc')
 
-  return opportunities as OpportunityWithProfession[]
+  if (Number.isFinite(asNumber) && cityParam.trim() !== '') {
+    const byId = await baseQuery
+      .clone()
+      .where('opportunities.territorial_authority_id', asNumber)
+    if (byId.length > 0) return byId as OpportunityWithProfession[]
+  }
+
+  const ta = await connection('territorial_authorities')
+    .select('id')
+    .whereRaw('LOWER(name) = LOWER(?)', [cityParam])
+    .orWhereRaw('LOWER(name) LIKE LOWER(?)', [`%${cityParam}%`])
+    .first()
+
+  if (ta?.id) {
+    const byTa = await baseQuery
+      .clone()
+      .where('opportunities.territorial_authority_id', ta.id)
+    return byTa as OpportunityWithProfession[]
+  }
+
+  return []
 }
 
 export async function getOpportunitieById(id: number): Promise<Opportunity> {
