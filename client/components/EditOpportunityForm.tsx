@@ -1,20 +1,21 @@
 import { useState, FormEvent, ChangeEvent } from 'react'
-import { useProfessions } from '../hooks/api.ts'
-import { Opportunity } from '../../models/Opportunity.ts'
-import LoadingIndicator from './LoadingIndicator.tsx'
+import LoadingIndicator from './LoadingIndicator'
+import useProfessions from '../hooks/use-professions'
+import useCities from '../hooks/use-cities'
+import type { Opportunity } from '../../models/Opportunity'
 
 interface Props extends Opportunity {
   submitLabel: string
-  onSubmit: (_: Opportunity) => void
+  onSubmit: (op: Opportunity) => void
 }
 
 export default function EditOpportunityForm(props: Props) {
   const { submitLabel, onSubmit, ...initial } = props
-  const professions = useProfessions()
 
-  const [formState, setFormState] = useState<Opportunity>({
-    ...initial,
-  })
+  const professions = useProfessions()
+  const cities = useCities()
+
+  const [formState, setFormState] = useState<Opportunity>({ ...initial })
 
   const handleChange = (
     evt: ChangeEvent<
@@ -24,7 +25,13 @@ export default function EditOpportunityForm(props: Props) {
     const { name, value } = evt.target
     setFormState((prev) => ({
       ...prev,
-      [name]: value,
+      // converte para número quando necessário
+      [name]:
+        name === 'professionId' ||
+        name === 'territorialAuthorityId' ||
+        name === 'localityId'
+          ? Number(value)
+          : value,
     }))
   }
 
@@ -33,9 +40,12 @@ export default function EditOpportunityForm(props: Props) {
     onSubmit(formState)
   }
 
-  if (professions.isPending) return <LoadingIndicator />
+  if (professions.isPending || cities.isPending) return <LoadingIndicator />
   if (professions.isError || !professions.data)
-    return 'Failed to load professions'
+    return <>Failed to load professions</>
+  if (cities.isError || !cities.data) return <>Failed to load cities</>
+
+  const taList = cities.data.cities
 
   return (
     <form onSubmit={handleSubmit} className="form">
@@ -63,11 +73,11 @@ export default function EditOpportunityForm(props: Props) {
         value={formState.description}
       />
 
-      <label htmlFor="profession" className="label">
+      <label htmlFor="professionId" className="label">
         Profession
       </label>
       <select
-        id="profession"
+        id="professionId"
         name="professionId"
         value={formState.professionId}
         onChange={handleChange}
@@ -79,31 +89,37 @@ export default function EditOpportunityForm(props: Props) {
         ))}
       </select>
 
-      <label htmlFor="city" className="label">
+      <label htmlFor="territorialAuthorityId" className="label">
         City
       </label>
       <select
-        id="city"
-        name="city"
-        value={formState.city}
+        id="territorialAuthorityId"
+        name="territorialAuthorityId"
+        value={formState.territorialAuthorityId}
         onChange={handleChange}
       >
-        {[
-          'Auckland',
-          'Wellington',
-          'Christchurch',
-          'Hamilton',
-          'Dunedin',
-          'Tauranga',
-          'Napier',
-        ].map((value) => (
-          <option key={value} value={value}>
-            {value}
+        {taList.map((ta) => (
+          <option key={ta.id} value={ta.id}>
+            {ta.shortName}
           </option>
         ))}
       </select>
 
-      <label htmlFor="time"> Hours </label>
+      <label htmlFor="legacySuburb" className="label">
+        Suburb
+      </label>
+      <input
+        type="text"
+        id="legacySuburb"
+        name="legacySuburb"
+        placeholder="e.g., Mount Eden"
+        onChange={handleChange}
+        value={formState.legacySuburb}
+      />
+
+      <label htmlFor="hours" className="label">
+        Hours
+      </label>
       <input
         type="text"
         id="hours"
@@ -113,7 +129,30 @@ export default function EditOpportunityForm(props: Props) {
         value={formState.hours}
       />
 
-      <div></div>
+      <label htmlFor="mobile" className="label">
+        Mobile
+      </label>
+      <input
+        type="tel"
+        id="mobile"
+        name="mobile"
+        onChange={handleChange}
+        placeholder="+64 …"
+        value={formState.mobile}
+      />
+
+      <label htmlFor="email" className="label">
+        Email
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        onChange={handleChange}
+        placeholder="name@example.com"
+        value={formState.email}
+      />
+
       <button className="form">{submitLabel}</button>
     </form>
   )

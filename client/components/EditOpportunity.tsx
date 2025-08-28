@@ -34,20 +34,20 @@ export default function EditEvent() {
 
   const handleSubmit = async (formData: Opportunity) => {
     await editOpportunity.mutateAsync(formData)
-    navigate(`/cities/${formData.city}`)
+    navigate(`/cities/${formData.legacyCity}`)
   }
 
   const handleDelete = async (evt: React.FormEvent) => {
     evt.preventDefault()
     await deleteOpportunity.mutateAsync()
-    navigate(`/cities/${opp.city}`)
+    navigate(`/cities/${opp.legacyCity}`)
   }
 
   return (
     <>
       <LineupNav />
       <h2>
-        edit opportunity: <span className="data">{opp.city}</span>
+        edit opportunity: <span className="data">{opp.legacyCity}</span>
       </h2>
       <EditOpportunityForm
         {...opp}

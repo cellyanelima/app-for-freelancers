@@ -4,11 +4,11 @@ import * as db from '../db/index.ts'
 
 const router = express.Router()
 
-// GET api/v1/cities
-router.get('/', async (req, res, next) => {
+// GET api/v1/cities  -> { cities: { name: string }[] }  (or { id, name } )
+router.get('/', async (_req, res, next) => {
   try {
-    const opportunities = await db.getAllOpportunities()
-    res.json({ opportunities })
+    const cities = await db.getAllCities()
+    res.json({ cities }) // [{ id, name }]
   } catch (e) {
     next(e)
   }
